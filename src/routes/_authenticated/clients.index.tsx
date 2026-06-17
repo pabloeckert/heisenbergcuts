@@ -6,7 +6,7 @@ import { fmtDate, clientStatus, effectiveCrystals } from "@/lib/loyalty";
 import { Plus, Search, Phone } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/clients")({
+export const Route = createFileRoute("/_authenticated/clients/")({
   head: () => ({ meta: [{ title: "Clientes · Heisenberg Cuts" }] }),
   component: ClientsPage,
 });
