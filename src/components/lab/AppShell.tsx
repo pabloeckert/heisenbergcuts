@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
-import { LayoutDashboard, Scissors, Users, Receipt, BarChart3, FlaskConical, Settings, LogOut, MessageSquareText } from "lucide-react";
+import { LayoutDashboard, Scissors, Users, Receipt, BarChart3, FlaskConical, Settings, LogOut, MessageSquareText, UserCog } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,7 @@ const navAll = [
   { to: "/transactions", label: "Transacciones", icon: Receipt, ownerOnly: false },
   { to: "/reports", label: "Cash Flow", icon: BarChart3, ownerOnly: true },
   { to: "/services", label: "Servicios", icon: FlaskConical, ownerOnly: true },
+  { to: "/users", label: "Usuarios", icon: UserCog, ownerOnly: true },
   { to: "/settings", label: "Ajustes", icon: Settings, ownerOnly: true },
 ];
 

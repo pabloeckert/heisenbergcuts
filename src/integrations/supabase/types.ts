@@ -345,6 +345,42 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_remove_user: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
+      admin_set_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: undefined
+      }
+      admin_update_profile: {
+        Args: {
+          _alias?: string
+          _full_name: string
+          _phone?: string
+          _user_id: string
+        }
+        Returns: undefined
+      }
+      is_superuser: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
+      list_users: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          alias: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          role: Database["public"]["Enums"]["app_role"] | null
+        }[]
+      }
       create_client: {
         Args: { _alias?: string; _full_name: string; _phone: string }
         Returns: {

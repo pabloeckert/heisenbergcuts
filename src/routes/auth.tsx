@@ -17,12 +17,32 @@ function AuthPage() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetting, setResetting] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/dashboard", replace: true });
     });
   }, [navigate]);
+
+  const forgotPassword = async () => {
+    if (!email) {
+      toast.error("Ingresá tu correo primero");
+      return;
+    }
+    setResetting(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("Te enviamos un email para restablecer tu contraseña");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "No se pudo enviar el email");
+    } finally {
+      setResetting(false);
+    }
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -120,6 +140,16 @@ function AuthPage() {
           >
             {loading ? "..." : mode === "signin" ? "Entrar al laboratorio" : "Cocinar cuenta"}
           </button>
+          {mode === "signin" && (
+            <button
+              type="button"
+              onClick={forgotPassword}
+              disabled={resetting}
+              className="w-full text-center text-[11px] uppercase tracking-widest text-muted-foreground hover:text-crystal disabled:opacity-60"
+            >
+              {resetting ? "Enviando…" : "¿Olvidaste tu contraseña?"}
+            </button>
+          )}
           {mode === "signup" && (
             <p className="text-[11px] text-muted-foreground">
               El primer usuario registrado obtendrá el rol de{" "}
