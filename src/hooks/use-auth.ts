@@ -13,12 +13,9 @@ export function useAuth() {
   useEffect(() => {
     let active = true;
     const fetchRole = async (uid: string) => {
-      const { data } = await (supabase as any)
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", uid);
+      const { data } = await supabase.from("user_roles").select("role").eq("user_id", uid);
       if (!active) return;
-      const roles = (data ?? []).map((r: any) => r.role as string);
+      const roles = (data ?? []).map((r) => r.role);
       setRole(roles.includes("owner") ? "owner" : roles.includes("barber") ? "barber" : null);
     };
     supabase.auth.getSession().then(({ data }) => {

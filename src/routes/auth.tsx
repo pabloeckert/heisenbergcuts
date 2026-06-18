@@ -41,8 +41,8 @@ function AuthPage() {
         if (error) throw error;
       }
       navigate({ to: "/dashboard", replace: true });
-    } catch (err: any) {
-      toast.error(err.message ?? "Error de autenticación");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Error de autenticación");
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,9 @@ function AuthPage() {
       <ParticleField />
       <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="inline-block text-crystal"><HeisenbergLogo size={72} /></div>
+          <div className="inline-block text-crystal">
+            <HeisenbergLogo size={72} />
+          </div>
           <h1 className="display text-5xl mt-3 text-crystal">HEISENBERG CUTS</h1>
           <p className="text-xs uppercase tracking-[0.35em] text-muted-foreground italic mt-2">
             Tú pides el corte · yo pongo la química
@@ -75,7 +77,9 @@ function AuthPage() {
 
           {mode === "signup" && (
             <div>
-              <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">Nombre completo</label>
+              <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                Nombre completo
+              </label>
               <input
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
@@ -85,7 +89,9 @@ function AuthPage() {
             </div>
           )}
           <div>
-            <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">Correo</label>
+            <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">
+              Correo
+            </label>
             <input
               type="email"
               value={email}
@@ -95,7 +101,9 @@ function AuthPage() {
             />
           </div>
           <div>
-            <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">Contraseña</label>
+            <label className="block text-xs uppercase tracking-widest text-muted-foreground mb-1">
+              Contraseña
+            </label>
             <input
               type="password"
               value={password}
@@ -105,12 +113,17 @@ function AuthPage() {
               className="w-full bg-input border border-border px-3 py-2 rounded-sm text-foreground focus:outline-none focus:border-crystal"
             />
           </div>
-          <button type="submit" disabled={loading} className="drum-button w-full py-3 rounded-sm disabled:opacity-60">
+          <button
+            type="submit"
+            disabled={loading}
+            className="drum-button w-full py-3 rounded-sm disabled:opacity-60"
+          >
             {loading ? "..." : mode === "signin" ? "Entrar al laboratorio" : "Cocinar cuenta"}
           </button>
           {mode === "signup" && (
             <p className="text-[11px] text-muted-foreground">
-              El primer usuario registrado obtendrá el rol de <span className="text-hazmat">Dueño</span>.
+              El primer usuario registrado obtendrá el rol de{" "}
+              <span className="text-hazmat">Dueño</span>.
             </p>
           )}
         </form>

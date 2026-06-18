@@ -1,8 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { PageTitle, HexPanel } from "@/components/lab/AppShell";
 import { fmtDateTime, fmtMoney } from "@/lib/loyalty";
+
+type TransactionRow = Tables<"transactions"> & {
+  clients: Pick<Tables<"clients">, "full_name" | "chem_id"> | null;
+  transaction_items: Pick<Tables<"transaction_items">, "service_name">[];
+};
 
 export const Route = createFileRoute("/_authenticated/transactions")({
   head: () => ({ meta: [{ title: "Transacciones · Heisenberg Cuts" }] }),
@@ -10,12 +16,14 @@ export const Route = createFileRoute("/_authenticated/transactions")({
 });
 
 function TxPage() {
-  const [tx, setTx] = useState<any[]>([]);
+  const [tx, setTx] = useState<TransactionRow[]>([]);
   useEffect(() => {
     (async () => {
-      const { data } = await (supabase as any).from("transactions")
+      const { data } = await supabase
+        .from("transactions")
         .select("*, clients(full_name, chem_id), transaction_items(service_name)")
-        .order("created_at", { ascending: false }).limit(300);
+        .order("created_at", { ascending: false })
+        .limit(300);
       setTx(data ?? []);
     })();
   }, []);
@@ -39,15 +47,26 @@ function TxPage() {
             {tx.map((t) => (
               <tr key={t.id} className="border-t border-border">
                 <td className="p-3 text-muted-foreground">{fmtDateTime(t.created_at)}</td>
-                <td className="p-3"><span className="text-crystal font-display mr-2">{t.clients?.chem_id}</span>{t.clients?.full_name}</td>
-                <td className="p-3 text-xs">{(t.transaction_items ?? []).map((i: any) => i.service_name).join(", ")}</td>
+                <td className="p-3">
+                  <span className="text-crystal font-display mr-2">{t.clients?.chem_id}</span>
+                  {t.clients?.full_name}
+                </td>
+                <td className="p-3 text-xs">
+                  {(t.transaction_items ?? []).map((i) => i.service_name).join(", ")}
+                </td>
                 <td className="p-3 text-right">{fmtMoney(t.total_paid)}</td>
                 <td className="p-3 text-right text-hazmat">{fmtMoney(t.commission_total)}</td>
                 <td className="p-3 text-right text-toxic">{fmtMoney(t.owner_net)}</td>
                 <td className="p-3 uppercase text-xs">{t.payment_method}</td>
               </tr>
             ))}
-            {tx.length === 0 && <tr><td colSpan={7} className="p-8 text-center text-muted-foreground">Sin transacciones aún.</td></tr>}
+            {tx.length === 0 && (
+              <tr>
+                <td colSpan={7} className="p-8 text-center text-muted-foreground">
+                  Sin transacciones aún.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </HexPanel>
