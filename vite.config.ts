@@ -14,5 +14,8 @@ export default defineConfig({
   },
   // Force-enable the Nitro deploy plugin outside the Lovable sandbox so `bun run build`
   // produces a Cloudflare Worker (dist/_worker.js) instead of a plain SSR bundle.
-  nitro: { preset: "cloudflare-module" },
+  nitro: {
+    preset: "cloudflare-module",
+    cloudflare: { wrangler: { name: "heisenbergcuts" } },
+  },
 });
