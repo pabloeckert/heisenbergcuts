@@ -1,8 +1,11 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 export function ParticleField({ count = 14 }: { count?: number }) {
-  const particles = useMemo(
-    () =>
+  const [particles, setParticles] = useState<
+    { left: number; delay: number; duration: number; size: number; key: number }[]
+  >([]);
+  useEffect(() => {
+    setParticles(
       Array.from({ length: count }).map((_, i) => ({
         left: Math.random() * 100,
         delay: Math.random() * 14,
@@ -10,8 +13,8 @@ export function ParticleField({ count = 14 }: { count?: number }) {
         size: 3 + Math.random() * 5,
         key: i,
       })),
-    [count],
-  );
+    );
+  }, [count]);
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
       {particles.map((p) => (

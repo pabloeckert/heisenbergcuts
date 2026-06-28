@@ -16,6 +16,6 @@ export default defineConfig({
   // produces a Cloudflare Worker (dist/_worker.js) instead of a plain SSR bundle.
   nitro: {
     preset: "cloudflare-module",
-    cloudflare: { wrangler: { name: "heisenbergcuts" } },
+    cloudflare: { nodeCompat: true },
   },
 });
