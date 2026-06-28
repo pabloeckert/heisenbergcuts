@@ -345,6 +345,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_remove_user: { Args: { _user_id: string }; Returns: undefined }
+      admin_set_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: undefined
+      }
+      admin_update_profile: {
+        Args: {
+          _alias?: string
+          _full_name: string
+          _phone?: string
+          _user_id: string
+        }
+        Returns: undefined
+      }
       create_client: {
         Args: { _alias?: string; _full_name: string; _phone: string }
         Returns: {
@@ -374,6 +391,18 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      list_users: {
+        Args: never
+        Returns: {
+          alias: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          role: Database["public"]["Enums"]["app_role"]
+        }[]
       }
       register_transaction: {
         Args: {
